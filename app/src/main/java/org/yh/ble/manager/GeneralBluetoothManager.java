@@ -34,9 +34,6 @@ public class GeneralBluetoothManager extends YHBluetoothManager
     /**
      * 获取BluetoothManager，防止多次创建
      *
-     * @param context
-     * @param bluetoothCallback
-     * @return
      */
     public static YHBluetoothManager getYHManager(Context context, I_BluetoothCallback bluetoothCallback)
     {
@@ -58,8 +55,7 @@ public class GeneralBluetoothManager extends YHBluetoothManager
     /**
      * 连接设备，如果蓝牙服务未开启或者地址为空的话就返回false；如果地址存在是否连接成功取决与蓝牙底层
      *
-     * @param address
-     * @return 是否连接到
+     * 返回 是否连成功
      */
     @Override
     public boolean connectDevice(String address)
@@ -91,9 +87,6 @@ public class GeneralBluetoothManager extends YHBluetoothManager
     {
         /**
          * 连接状态改变回调
-         * @param gatt
-         * @param status
-         * @param newState
          */
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState)
@@ -109,9 +102,7 @@ public class GeneralBluetoothManager extends YHBluetoothManager
         }
 
         /**
-         * 当远程设备的远程服务列表，特征和描述符已被更新，即已发现新服务时，调用回调。表示可以与之通信了。
-         * @param gatt
-         * @param status
+         * 当远程设备的远程服务列表，特征和描述符已被更新，即已发现新服务时，调用回调。表示可以与之通信了。å
          */
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status)
@@ -147,8 +138,6 @@ public class GeneralBluetoothManager extends YHBluetoothManager
 
         /**
          * 由于远程特征通知而触发回调。
-         * @param gatt
-         * @param characteristic
          */
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
@@ -165,9 +154,6 @@ public class GeneralBluetoothManager extends YHBluetoothManager
 
         /**
          * 返回远程设备的信号强度，最大值理论值为0
-         * @param gatt
-         * @param rssi
-         * @param status
          */
         @Override
         public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status)
@@ -210,7 +196,6 @@ public class GeneralBluetoothManager extends YHBluetoothManager
     /**
      * 获取链接的设备
      *
-     * @return
      */
     @Override
     public List<BluetoothDevice> getConnectedDevices(int profile)
