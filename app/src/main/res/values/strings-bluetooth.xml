@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bluetooth_enable">enable bluetooth</string>
+    <string name="bluetooth_disable">disable bluetooth</string>
+    <string name="bluetooth_not_ble">unsupported BLE</string>
+    <string name="bluetooth_unsupported">unsupported bluetooth</string>
+    <string name="bluetooth_start">start scanning</string>
+    <string name="bluetooth_code">bar code is null</string>
+    <string name="context_null">Context is null</string>
+    <string name="network_unavailable">network is not available</string>
+    <string name="bluetooth_disconnect">bluetooth disconnect</string>
+    <string name="bluetooth_connected">bluetooth connect</string>
+    <string name="permission_denied">denied permission</string>
+    <string name="permission_denied_never">denied permission with never ask again</string>
+    <string name="bluetooth_scanning">scan bluetooth infomation</string>
+    <string name="bluetooth_value_changed">value changed</string>
+    <string name="bluetooth_reconnect">reconnect</string>
+    <string name="bluetooth_bonded_devices">bonded devices</string>
+    <string name="bluetooth_service_discovered">services discovered</string>
+    <string name="permission_granted">granted permission</string>
+</resources>
