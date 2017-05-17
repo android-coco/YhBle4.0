@@ -1,13 +1,16 @@
 package org.yh.ble;
 
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 public class MainActivity extends AppCompatActivity implements I_ResultView<BluetoothDevice>
 {
-    private BluetoothService bluetoothUnity;
-    private DeviceBean deviceBean;
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private BluetoothControl bluetoothUnity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -22,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements I_ResultView<Blue
      */
     private void init()
     {
-        this.bluetoothUnity = new BluetoothService(this, this);
+        this.bluetoothUnity = new BluetoothControl(this, this);
     }
 
     /**
@@ -32,38 +35,48 @@ public class MainActivity extends AppCompatActivity implements I_ResultView<Blue
     {
         bluetoothUnity.startScan();
     }
+
     @Override
     public void startView(String msg)
     {
     }
 
-    @Override
-    public void successView(BluetoothDevice bean, int rssi)
-    {
 
+    @Override
+    public void successView(BluetoothDevice bean, int rssi, byte[] scanRecord)
+    {
+        bluetoothUnity.connectDevice(bean.getAddress());
     }
 
     @Override
     public void disconnectedView(String error)
     {
-
+        Log.e(TAG, "disconnectedView:" + error);
     }
 
     @Override
     public void connectedView()
     {
-
+        Log.e(TAG, "connectedView");
     }
 
     @Override
-    public void completeView()
+    public void completeView(final BluetoothGatt gatt)
     {
-
+        //可发送数据了
     }
 
     @Override
-    public void valueView(String value)
+    public void valueView(YhModel value)
     {
+        Log.e(TAG,  "数据:" + value);
+    }
 
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        bluetoothUnity.destroyBluetooth();
     }
 }

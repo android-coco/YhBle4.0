@@ -7,14 +7,14 @@ import android.bluetooth.BluetoothDevice;
  * 与蓝牙相关的回调(https://github.com/android-coco/YhBle4.0)
  */
 
-public interface I_BluetoothCallback
+public interface I_BluetoothCallback<T>
 {
     /**
      * 扫描成功
      *
      * @param bluetoothDevice
      */
-    void scanSuccess(BluetoothDevice bluetoothDevice, int rssi);
+    void scanSuccess(BluetoothDevice bluetoothDevice, int rssi,byte[] scanRecord);
 
     /**
      * 连接状态改变
@@ -33,5 +33,5 @@ public interface I_BluetoothCallback
      *
      * @param value
      */
-    void valueChanged(String value);
+    void valueChanged(byte[] value);
 }

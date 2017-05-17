@@ -11,7 +11,6 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.util.Log;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -33,7 +32,6 @@ public class GeneralBluetoothManager extends YHBluetoothManager
 
     /**
      * 获取BluetoothManager，防止多次创建
-     *
      */
     public static YHBluetoothManager getYHManager(Context context, I_BluetoothCallback bluetoothCallback)
     {
@@ -54,7 +52,7 @@ public class GeneralBluetoothManager extends YHBluetoothManager
 
     /**
      * 连接设备，如果蓝牙服务未开启或者地址为空的话就返回false；如果地址存在是否连接成功取决与蓝牙底层
-     *
+     * <p>
      * 返回 是否连成功
      */
     @Override
@@ -124,10 +122,10 @@ public class GeneralBluetoothManager extends YHBluetoothManager
                     return;
                 }
                 gatt.setCharacteristicNotification(gattCharacteristic, true);
-                BluetoothGattDescriptor descriptor = gattCharacteristic
-                        .getDescriptor(BluetoothConstant.UUID_DESCRIPTOR);
+                BluetoothGattDescriptor descriptor = gattCharacteristic.getDescriptor(BluetoothConstant.UUID_DESCRIPTOR);
                 descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                 gatt.writeDescriptor(descriptor);
+
 
                 bluetoothCallback.serviceDiscoveryed(gatt.getDevice(), status);
             } else
@@ -143,13 +141,7 @@ public class GeneralBluetoothManager extends YHBluetoothManager
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic)
         {
-            try
-            {
-                bluetoothCallback.valueChanged(new String(characteristic.getValue(), "UTF-8"));
-            } catch (UnsupportedEncodingException e)
-            {
-                e.printStackTrace();
-            }
+            bluetoothCallback.valueChanged(characteristic.getValue());
         }
 
         /**
@@ -195,11 +187,17 @@ public class GeneralBluetoothManager extends YHBluetoothManager
 
     /**
      * 获取链接的设备
-     *
      */
     @Override
     public List<BluetoothDevice> getConnectedDevices(int profile)
     {
         return arshowBluetooth.getBluetoothManager().getConnectedDevices(profile);
     }
+
+    @Override
+    public BluetoothGatt getBluetoothGatt()
+    {
+        return mBluetoothGatt;
+    }
+
 }

@@ -3,6 +3,7 @@ package org.yh.ble.manager;
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
@@ -57,6 +58,8 @@ public abstract class YHBluetoothManager
     public abstract void disconnectDevice();
 
     public abstract boolean connectDevice(String address);
+    //获取gatt
+    public abstract BluetoothGatt getBluetoothGatt();
 
     /**
      * 是否开启了蓝牙
@@ -144,7 +147,7 @@ public abstract class YHBluetoothManager
             @Override
             public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord)
             {
-                addDevice(device, rssi);
+                addDevice(device, rssi,scanRecord);
             }
         });
         arshowBluetooth = gatt;
@@ -162,7 +165,7 @@ public abstract class YHBluetoothManager
             public void onScanResult(int callbackType, ScanResult result)
             {
                 super.onScanResult(callbackType, result);
-                addDevice(result.getDevice(), result.getRssi());
+                addDevice(result.getDevice(), result.getRssi(),result.getScanRecord().getBytes());
             }
 
             @Override
@@ -179,9 +182,9 @@ public abstract class YHBluetoothManager
      *
      * @param device
      */
-    private void addDevice(BluetoothDevice device, int rssi)
+    private void addDevice(BluetoothDevice device, int rssi,byte[] scanRecord)
     {
-        bluetoothCallback.scanSuccess(device, rssi);
+        bluetoothCallback.scanSuccess(device, rssi,scanRecord);
     }
 
     public final boolean isSupportBluetooth()

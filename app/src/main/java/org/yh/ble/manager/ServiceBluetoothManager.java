@@ -1,6 +1,7 @@
 package org.yh.ble.manager;
 
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -9,9 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.List;
 
@@ -121,11 +120,10 @@ public class ServiceBluetoothManager extends YHBluetoothManager
         @Override
         public void onReceive(Context context, final Intent intent)
         {
-            Log.e(TAG, "onCharacteristicChanged：" +
-                    (Thread.currentThread() == Looper.getMainLooper().getThread()));
+//            Log.e(TAG, "onCharacteristicChanged：" +
+//                    (Thread.currentThread() == Looper.getMainLooper().getThread()));
             final String action = intent.getAction();
-            BluetoothDevice device = intent
-                    .getParcelableExtra(BluetoothLeService.EXTRA_DATA_DEVICE);
+            BluetoothDevice device = intent.getParcelableExtra(BluetoothLeService.EXTRA_DATA_DEVICE);
             if (BluetoothLeService.ACTION_GATT_CONNECTION_CHANGED.equals(action))
             {
                 int newState = intent.getIntExtra(BluetoothLeService.EXTRA_DATA_NEW_STATE, -1);
@@ -136,8 +134,8 @@ public class ServiceBluetoothManager extends YHBluetoothManager
                 bluetoothCallback.serviceDiscoveryed(device, status);
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action))
             {
-                bluetoothCallback
-                        .valueChanged(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+                //Log.e(TAG, Arrays.toString(intent.getByteArrayExtra(BluetoothLeService.EXTRA_DATA)));
+                bluetoothCallback.valueChanged(intent.getByteArrayExtra(BluetoothLeService.EXTRA_DATA));
             }
         }
     };
@@ -198,5 +196,10 @@ public class ServiceBluetoothManager extends YHBluetoothManager
         context.unregisterReceiver(mGattUpdateReceiver);
         context.unbindService(mServiceConnection);
         sBluetoothManager = null;
+    }
+    @Override
+    public BluetoothGatt getBluetoothGatt()
+    {
+        return mBluetoothLeService.getBluetoothGatt();
     }
 }

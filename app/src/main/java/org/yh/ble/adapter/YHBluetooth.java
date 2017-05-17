@@ -13,8 +13,8 @@ import android.os.Handler;
 
 public abstract class YHBluetooth
 {
-    //用于停止扫描时间，默认时间15秒
-    private int scanPeriod = 15000;
+    //用于停止扫描时间，默认时间20秒
+    private int scanPeriod = 20000;
     protected Context context;
     //蓝牙适配器
     private BluetoothAdapter bluetoothAdapter;

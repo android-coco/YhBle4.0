@@ -170,8 +170,7 @@ public class BluetoothLeService extends Service
                 intent.putExtra(EXTRA_DATA_STATUS, status);
                 intent.putExtra(EXTRA_DATA_DEVICE, gatt.getDevice());
                 sendBroadcast(intent);
-            }
-            else
+            } else
             {
                 Log.e(getClass().getSimpleName(), "onServicesDiscovered received: " + status);
             }
@@ -186,8 +185,8 @@ public class BluetoothLeService extends Service
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic)
         {
-            Log.e(TAG, "onCharacteristicChanged：" +
-                    (Thread.currentThread() == Looper.getMainLooper().getThread()));
+//            Log.e(TAG, "onCharacteristicChanged：" +
+//                    (Thread.currentThread() == Looper.getMainLooper().getThread()));
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
         }
 
@@ -203,39 +202,48 @@ public class BluetoothLeService extends Service
                                  final BluetoothGattCharacteristic characteristic)
     {
         final Intent intent = new Intent(action);
+        final byte[] data = characteristic.getValue();
+        if (data != null && data.length > 0)
+        {
+            intent.putExtra(EXTRA_DATA, data);
+            sendBroadcast(intent);
+        }
+        //Log.e(TAG + "原始数据：", Arrays.toString(characteristic.getValue()));
 
         // This is special handling for the Heart Rate Measurement profile.  Data parsing is
         // carried out as per profile specifications:
         // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer
         // .aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
-        if (BluetoothConstant.UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid()))
-        {
-            int flag = characteristic.getProperties();
-            int format = -1;
-            if ((flag & 0x01) != 0)
-            {
-                format = BluetoothGattCharacteristic.FORMAT_UINT16;
-                Log.e(TAG, "Heart rate format UINT16.");
-            }
-            else
-            {
-                format = BluetoothGattCharacteristic.FORMAT_UINT8;
-                Log.e(getClass().getSimpleName(), "Heart rate format UINT8.");
-            }
-            final int heartRate = characteristic.getIntValue(format, 1);
-            Log.e(TAG, String.format("Received heart rate: %d", heartRate));
-            intent.putExtra(EXTRA_DATA, String.valueOf(heartRate));
-        }
-        else
-        {
-            // 对于所有其他配置文件,写在十六进制数据格式化
-            final byte[] data = characteristic.getValue();
-            if (data != null && data.length > 0)
-            {
-                intent.putExtra(EXTRA_DATA, new String(data));
-            }
-        }
-        sendBroadcast(intent);
+//        if (BluetoothConstant.UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid()))
+//        {
+//            int flag = characteristic.getProperties();
+//            int format = -1;
+//            if ((flag & 0x01) != 0)
+//            {
+//                format = BluetoothGattCharacteristic.FORMAT_UINT16;
+//                Log.e(TAG, "Heart rate format UINT16.");
+//            }
+//            else
+//            {
+//                format = BluetoothGattCharacteristic.FORMAT_UINT8;
+//                Log.e(getClass().getSimpleName(), "Heart rate format UINT8.");
+//            }
+//            final int heartRate = characteristic.getIntValue(format, 1);
+//            Log.e(TAG, String.format("Received heart rate: %d", heartRate));
+//            //intent.putExtra(EXTRA_DATA, String.valueOf(heartRate));
+//            intent.putExtra(EXTRA_DATA, new byte[]{(byte) heartRate});
+//        }
+//        else
+//        {
+//            // 对于所有其他配置文件,写在十六进制数据格式化
+//            final byte[] data = characteristic.getValue();
+//            if (data != null && data.length > 0)
+//            {
+//                //intent.putExtra(EXTRA_DATA, new String(data));
+//                intent.putExtra(EXTRA_DATA, data);
+//            }
+//        }
+//        sendBroadcast(intent);
     }
 
     /**
@@ -297,5 +305,11 @@ public class BluetoothLeService extends Service
     public List<BluetoothDevice> getConnectedDevices(int profile)
     {
         return mBluetoothManager.getConnectedDevices(profile);
+    }
+
+
+    public BluetoothGatt getBluetoothGatt()
+    {
+        return mBluetoothGatt;
     }
 }
